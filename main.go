@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
 
 type Task struct {
 	ID          int
@@ -39,11 +43,14 @@ func main() {
 
 func addTask(tasks []Task) []Task {
 	var task Task
+	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Println("Введите название задачи:")
-	fmt.Scan(&task.Title)
+	scanner.Scan()
+	task.Title = scanner.Text()
 
 	fmt.Println("Введите описание задачи:")
-	fmt.Scan(&task.Description)
+	scanner.Scan()
+	task.Description = scanner.Text()
 
 	tasks = append(tasks, task)
 
