@@ -23,6 +23,12 @@ func addTask(tasks []Task, nextID int, scanner *bufio.Scanner) ([]Task, int) {
 	}
 	task.Description = description
 
+	task.Status, err = readStatus(scanner)
+	if err != nil {
+		fmt.Println("Введите число")
+		return tasks, nextID
+	}
+
 	task.ID = nextID
 	nextID++
 	tasks = append(tasks, task)
@@ -36,7 +42,7 @@ func showTasks(tasks []Task) {
 		return
 	}
 	for _, task := range tasks {
-		fmt.Printf("ID: %d, Title: %s, Description: %s\n", task.ID, task.Title, task.Description)
+		fmt.Printf("ID: %d, Title: %s, Description: %s, Status: %s\n", task.ID, task.Title, task.Description, task.Status)
 	}
 
 }
@@ -92,6 +98,13 @@ func updateTask(tasks []Task, scanner *bufio.Scanner) []Task {
 				return tasks
 			}
 
+			status, err := readStatus(scanner)
+			if err != nil {
+				fmt.Println("Введите число")
+				return tasks
+			}
+
+			tasks[i].Status = status
 			tasks[i].Title = title
 			tasks[i].Description = description
 			fmt.Println("Задача изменена")
@@ -103,4 +116,28 @@ func updateTask(tasks []Task, scanner *bufio.Scanner) []Task {
 	}
 
 	return tasks
+}
+
+func readStatus(scanner *bufio.Scanner) (string, error) {
+	fmt.Println("Введите статус задачи:")
+	fmt.Println("1. TODO")
+	fmt.Println("2. IN PROGRESS")
+	fmt.Println("3. DONE")
+
+	status, err := readInt(scanner)
+	if err != nil {
+		fmt.Println("Введите число")
+		return "", err
+	}
+
+	switch status {
+	case 1:
+		return "TODO", nil
+	case 2:
+		return "IN PROGRESS", nil
+	case 3:
+		return "DONE", nil
+	default:
+		return "", fmt.Errorf("неверный статус")
+	}
 }
