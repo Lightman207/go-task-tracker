@@ -18,7 +18,8 @@ func main() {
 		fmt.Println("2. Показать задачи")
 		fmt.Println("3. Изменить задачу")
 		fmt.Println("4. Удалить задачу")
-		fmt.Println("5. Выйти")
+		fmt.Println("5. Поиск задачи")
+		fmt.Println("6. Выйти")
 
 		choice, err := readInt(scanner)
 
@@ -37,6 +38,8 @@ func main() {
 		case 4:
 			tasks = deleteTask(tasks, scanner)
 		case 5:
+			searchTasks(tasks, scanner)
+		case 6:
 			fmt.Println("Выход")
 			return
 		default:

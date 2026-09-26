@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"strings"
 )
 
 func addTask(tasks []Task, nextID int, scanner *bufio.Scanner) ([]Task, int) {
@@ -139,5 +140,26 @@ func readStatus(scanner *bufio.Scanner) (string, error) {
 		return "DONE", nil
 	default:
 		return "", fmt.Errorf("неверный статус")
+	}
+}
+
+func searchTasks(tasks []Task, scanner *bufio.Scanner) {
+	found := false
+	fmt.Println("Введите название задачи для поиска:")
+	title, err := readInput(scanner)
+	if err != nil {
+		fmt.Println("Введите строку")
+		return
+	}
+
+	for _, task := range tasks {
+		if strings.Contains(task.Title, title) {
+			fmt.Printf("ID: %d, Title: %s, Description: %s, Status: %s\n", task.ID, task.Title, task.Description, task.Status)
+			found = true
+		}
+	}
+
+	if found == false {
+		fmt.Println("Задачи не найдены")
 	}
 }
