@@ -14,6 +14,7 @@ type Task struct {
 
 func main() {
 	tasks := []Task{}
+	nextID := 1
 
 	for {
 		fmt.Println("__ Roadmap __")
@@ -27,7 +28,7 @@ func main() {
 
 		switch choice {
 		case 1:
-			tasks = addTask(tasks)
+			tasks, nextID = addTask(tasks, nextID)
 		case 2:
 			showTasks(tasks)
 		case 3:
@@ -41,8 +42,9 @@ func main() {
 	}
 }
 
-func addTask(tasks []Task) []Task {
+func addTask(tasks []Task, nextID int) ([]Task, int) {
 	var task Task
+
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Println("Введите название задачи:")
 	scanner.Scan()
@@ -52,10 +54,11 @@ func addTask(tasks []Task) []Task {
 	scanner.Scan()
 	task.Description = scanner.Text()
 
-	task.ID = len(tasks) + 1
+	task.ID = nextID
+	nextID++
 	tasks = append(tasks, task)
 
-	return tasks
+	return tasks, nextID
 }
 
 func showTasks(tasks []Task) {
