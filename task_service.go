@@ -64,3 +64,43 @@ func deleteTask(tasks []Task, scanner *bufio.Scanner) []Task {
 
 	return tasks
 }
+
+func updateTask(tasks []Task, scanner *bufio.Scanner) []Task {
+	found := false
+
+	fmt.Println("Введите ID задачи для изменения:")
+	id, err := readInt(scanner)
+	if err != nil {
+		fmt.Println("Введите число")
+		return tasks
+	}
+
+	for i, task := range tasks {
+		if task.ID == id {
+			found = true
+			fmt.Println("Введите новое название задачи:")
+			title, err := readInput(scanner)
+			if err != nil {
+				fmt.Println("Введите строку")
+				return tasks
+			}
+
+			fmt.Println("Введите новое описание задачи:")
+			description, err := readInput(scanner)
+			if err != nil {
+				fmt.Println("Введите строку")
+				return tasks
+			}
+
+			tasks[i].Title = title
+			tasks[i].Description = description
+			fmt.Println("Задача изменена")
+			break
+		}
+	}
+	if !found {
+		fmt.Println("Задача с таким ID не найдена")
+	}
+
+	return tasks
+}

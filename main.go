@@ -16,8 +16,9 @@ func main() {
 		fmt.Println("__ Roadmap __")
 		fmt.Println("1. Добавить задачу")
 		fmt.Println("2. Показать задачи")
-		fmt.Println("3. Удалить задачу")
-		fmt.Println("4. Выйти")
+		fmt.Println("3. Изменить задачу")
+		fmt.Println("4. Удалить задачу")
+		fmt.Println("5. Выйти")
 
 		choice, err := readInt(scanner)
 
@@ -32,8 +33,10 @@ func main() {
 		case 2:
 			showTasks(tasks)
 		case 3:
-			tasks = deleteTask(tasks, scanner)
+			tasks = updateTask(tasks, scanner)
 		case 4:
+			tasks = deleteTask(tasks, scanner)
+		case 5:
 			fmt.Println("Выход")
 			return
 		default:
