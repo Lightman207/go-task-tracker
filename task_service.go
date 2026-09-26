@@ -30,6 +30,12 @@ func addTask(tasks []Task, nextID int, scanner *bufio.Scanner) ([]Task, int) {
 		return tasks, nextID
 	}
 
+	task.Priority, err = readPriority(scanner)
+	if err != nil {
+		fmt.Println("Введите число")
+		return tasks, nextID
+	}
+
 	task.ID = nextID
 	nextID++
 	tasks = append(tasks, task)
@@ -43,7 +49,7 @@ func showTasks(tasks []Task) {
 		return
 	}
 	for _, task := range tasks {
-		fmt.Printf("ID: %d, Title: %s, Description: %s, Status: %s\n", task.ID, task.Title, task.Description, task.Status)
+		fmt.Printf("ID: %d, Title: %s, Description: %s, Status: %s, Priority: %s\n", task.ID, task.Title, task.Description, task.Status, task.Priority)
 	}
 
 }
@@ -105,6 +111,13 @@ func updateTask(tasks []Task, scanner *bufio.Scanner) []Task {
 				return tasks
 			}
 
+			priority, err := readPriority(scanner)
+			if err != nil {
+				fmt.Println("Введите число")
+				return tasks
+			}
+
+			tasks[i].Priority = priority
 			tasks[i].Status = status
 			tasks[i].Title = title
 			tasks[i].Description = description
@@ -143,6 +156,30 @@ func readStatus(scanner *bufio.Scanner) (string, error) {
 	}
 }
 
+func readPriority(scanner *bufio.Scanner) (string, error) {
+	fmt.Println("Введите приоритет задачи:")
+	fmt.Println("1. LOW")
+	fmt.Println("2. MEDIUM")
+	fmt.Println("3. HIGH")
+
+	priority, err := readInt(scanner)
+	if err != nil {
+		fmt.Println("Введите число")
+		return "", err
+	}
+
+	switch priority {
+	case 1:
+		return "LOW", nil
+	case 2:
+		return "MEDIUM", nil
+	case 3:
+		return "HIGH", nil
+	default:
+		return "", fmt.Errorf("неверный приоритет")
+	}
+}
+
 func searchTasks(tasks []Task, scanner *bufio.Scanner) {
 	found := false
 	fmt.Println("Введите название задачи для поиска:")
@@ -154,12 +191,32 @@ func searchTasks(tasks []Task, scanner *bufio.Scanner) {
 
 	for _, task := range tasks {
 		if strings.Contains(task.Title, title) {
-			fmt.Printf("ID: %d, Title: %s, Description: %s, Status: %s\n", task.ID, task.Title, task.Description, task.Status)
+			fmt.Printf("ID: %d, Title: %s, Description: %s, Status: %s, Priority: %s\n", task.ID, task.Title, task.Description, task.Status, task.Priority)
 			found = true
 		}
 	}
 
-	if found == false {
+	if !found {
+		fmt.Println("Задачи не найдены")
+	}
+}
+
+func filterTasks(tasks []Task, scanner *bufio.Scanner) {
+	status, err := readStatus(scanner)
+	if err != nil {
+		fmt.Println("Error")
+		return
+	}
+	found := false
+
+	for _, task := range tasks {
+		if task.Status == status {
+			fmt.Printf("ID: %d, Title: %s, Description: %s, Status: %s, Priority: %s\n", task.ID, task.Title, task.Description, task.Status, task.Priority)
+			found = true
+		}
+	}
+
+	if !found {
 		fmt.Println("Задачи не найдены")
 	}
 }
