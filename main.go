@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 )
 
 type Task struct {
@@ -16,6 +17,8 @@ func main() {
 	tasks := []Task{}
 	nextID := 1
 
+	scanner := bufio.NewScanner(os.Stdin)
+
 	for {
 		fmt.Println("__ Roadmap __")
 		fmt.Println("1. Добавить задачу")
@@ -23,16 +26,20 @@ func main() {
 		fmt.Println("3. Удалить задачу")
 		fmt.Println("4. Выйти")
 
-		var choice int
-		fmt.Scan(&choice)
+		choice, err := readInt(scanner)
+
+		if err != nil {
+			fmt.Println("Введите число")
+			continue
+		}
 
 		switch choice {
 		case 1:
-			tasks, nextID = addTask(tasks, nextID)
+			tasks, nextID = addTask(tasks, nextID, scanner)
 		case 2:
 			showTasks(tasks)
 		case 3:
-			tasks = deleteTask(tasks)
+			tasks = deleteTask(tasks, scanner)
 		case 4:
 			fmt.Println("Выход")
 			return
@@ -42,17 +49,23 @@ func main() {
 	}
 }
 
-func addTask(tasks []Task, nextID int) ([]Task, int) {
+func addTask(tasks []Task, nextID int, scanner *bufio.Scanner) ([]Task, int) {
 	var task Task
-
-	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Println("Введите название задачи:")
-	scanner.Scan()
-	task.Title = scanner.Text()
+	title, err := readInput(scanner)
+	if err != nil {
+		fmt.Println("Введите строку")
+		return tasks, nextID
+	}
+	task.Title = title
 
 	fmt.Println("Введите описание задачи:")
-	scanner.Scan()
-	task.Description = scanner.Text()
+	description, err := readInput(scanner)
+	if err != nil {
+		fmt.Println("Введите строку")
+		return tasks, nextID
+	}
+	task.Description = description
 
 	task.ID = nextID
 	nextID++
@@ -65,18 +78,21 @@ func showTasks(tasks []Task) {
 	if len(tasks) == 0 {
 		fmt.Println("Нет задач")
 		return
-	} else {
-		for _, task := range tasks {
-			fmt.Printf("ID: %d, Title: %s, Description: %s\n", task.ID, task.Title, task.Description)
-		}
 	}
+	for _, task := range tasks {
+		fmt.Printf("ID: %d, Title: %s, Description: %s\n", task.ID, task.Title, task.Description)
+	}
+
 }
 
-func deleteTask(tasks []Task) []Task {
-	var id int
+func deleteTask(tasks []Task, scanner *bufio.Scanner) []Task {
 	found := false
 	fmt.Println("Введите ID задачи для удаления:")
-	fmt.Scan(&id)
+	id, err := readInt(scanner)
+	if err != nil {
+		fmt.Println("Введите число")
+		return tasks
+	}
 
 	for i, task := range tasks {
 		if task.ID == id {
@@ -91,4 +107,18 @@ func deleteTask(tasks []Task) []Task {
 	}
 
 	return tasks
+}
+
+func readInput(scanner *bufio.Scanner) (string, error) {
+	if !scanner.Scan() {
+		return "", fmt.Errorf("ошибка чтения ввода")
+	}
+	return scanner.Text(), nil
+}
+
+func readInt(scanner *bufio.Scanner) (int, error) {
+	if !scanner.Scan() {
+		return 0, fmt.Errorf("ошибка чтения ввода")
+	}
+	return strconv.Atoi(scanner.Text())
 }
