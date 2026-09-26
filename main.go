@@ -31,7 +31,7 @@ func main() {
 		case 2:
 			showTasks(tasks)
 		case 3:
-			fmt.Println("Удаление задачи")
+			tasks = deleteTask(tasks)
 		case 4:
 			fmt.Println("Выход")
 			return
@@ -52,6 +52,7 @@ func addTask(tasks []Task) []Task {
 	scanner.Scan()
 	task.Description = scanner.Text()
 
+	task.ID = len(tasks) + 1
 	tasks = append(tasks, task)
 
 	return tasks
@@ -66,4 +67,25 @@ func showTasks(tasks []Task) {
 			fmt.Printf("ID: %d, Title: %s, Description: %s\n", task.ID, task.Title, task.Description)
 		}
 	}
+}
+
+func deleteTask(tasks []Task) []Task {
+	var id int
+	found := false
+	fmt.Println("Введите ID задачи для удаления:")
+	fmt.Scan(&id)
+
+	for i, task := range tasks {
+		if task.ID == id {
+			tasks = append(tasks[:i], tasks[i+1:]...)
+			found = true
+			fmt.Println("Задача удалена")
+			break
+		}
+	}
+	if !found {
+		fmt.Println("Задача с таким ID не найдена")
+	}
+
+	return tasks
 }
