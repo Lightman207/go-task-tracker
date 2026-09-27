@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"strings"
+	"time"
 )
 
 func addTask(tasks []Task, nextID int, scanner *bufio.Scanner) ([]Task, int) {
@@ -38,6 +39,11 @@ func addTask(tasks []Task, nextID int, scanner *bufio.Scanner) ([]Task, int) {
 
 	task.ID = nextID
 	nextID++
+
+	now := time.Now()
+	task.CreatedAt = now
+	task.UpdatedAt = now
+
 	tasks = append(tasks, task)
 
 	return tasks, nextID
@@ -49,7 +55,7 @@ func showTasks(tasks []Task) {
 		return
 	}
 	for _, task := range tasks {
-		fmt.Printf("ID: %d, Title: %s, Description: %s, Status: %s, Priority: %s\n", task.ID, task.Title, task.Description, task.Status, task.Priority)
+		printTask(task)
 	}
 
 }
@@ -117,6 +123,7 @@ func updateTask(tasks []Task, scanner *bufio.Scanner) []Task {
 				return tasks
 			}
 
+			tasks[i].UpdatedAt = time.Now()
 			tasks[i].Priority = priority
 			tasks[i].Status = status
 			tasks[i].Title = title
@@ -191,7 +198,7 @@ func searchTasks(tasks []Task, scanner *bufio.Scanner) {
 
 	for _, task := range tasks {
 		if strings.Contains(task.Title, title) {
-			fmt.Printf("ID: %d, Title: %s, Description: %s, Status: %s, Priority: %s\n", task.ID, task.Title, task.Description, task.Status, task.Priority)
+			printTask(task)
 			found = true
 		}
 	}
@@ -211,7 +218,7 @@ func filterTasks(tasks []Task, scanner *bufio.Scanner) {
 
 	for _, task := range tasks {
 		if task.Status == status {
-			fmt.Printf("ID: %d, Title: %s, Description: %s, Status: %s, Priority: %s\n", task.ID, task.Title, task.Description, task.Status, task.Priority)
+			printTask(task)
 			found = true
 		}
 	}
@@ -219,4 +226,16 @@ func filterTasks(tasks []Task, scanner *bufio.Scanner) {
 	if !found {
 		fmt.Println("Задачи не найдены")
 	}
+}
+
+func printTask(task Task) {
+	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+	fmt.Printf("ID: %d\n", task.ID)
+	fmt.Printf("Название: %s\n", task.Title)
+	fmt.Printf("Описание: %s\n", task.Description)
+	fmt.Printf("Статус: %s\n", task.Status)
+	fmt.Printf("Приоритет: %s\n", task.Priority)
+	fmt.Printf("Создана: %s\n", task.CreatedAt.Format("02.01.2006 15:04"))
+	fmt.Printf("Изменена: %s\n", task.UpdatedAt.Format("02.01.2006 15:04"))
+	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 }

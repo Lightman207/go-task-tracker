@@ -7,8 +7,12 @@ import (
 )
 
 func main() {
-	tasks := []Task{}
-	nextID := 1
+	tasks, err := loadTasks()
+	if err != nil {
+		tasks = []Task{}
+	}
+
+	nextID := getNextID(tasks)
 
 	scanner := bufio.NewScanner(os.Stdin)
 
@@ -32,12 +36,27 @@ func main() {
 		switch choice {
 		case 1:
 			tasks, nextID = addTask(tasks, nextID, scanner)
+
+			err := saveTasks(tasks)
+			if err != nil {
+				fmt.Println("Ошибка сохранения:", err)
+			}
 		case 2:
 			showTasks(tasks)
 		case 3:
 			tasks = updateTask(tasks, scanner)
+
+			err := saveTasks(tasks)
+			if err != nil {
+				fmt.Println("Ошибка сохранения:", err)
+			}
 		case 4:
 			tasks = deleteTask(tasks, scanner)
+
+			err := saveTasks(tasks)
+			if err != nil {
+				fmt.Println("Ошибка сохранения:", err)
+			}
 		case 5:
 			searchTasks(tasks, scanner)
 		case 6:
