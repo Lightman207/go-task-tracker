@@ -4,7 +4,7 @@ A simple command-line task tracker built with **Go**.
 
 This project was created as a practical exercise to learn Go fundamentals, work with JSON persistence, handle files, and build a small CLI application with a clean and understandable structure.
 
-**Project:** https://roadmap.sh/projects/task-tracker
+**Project:** [https://roadmap.sh/projects/task-tracker](https://roadmap.sh/projects/task-tracker/solutions?u=6708f8e8fb4be684db21ad1e)
 
 ---
 
