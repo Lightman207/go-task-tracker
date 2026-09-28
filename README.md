@@ -255,6 +255,6 @@ The main goal of this project is to gain practical experience with Go by buildin
 
 The project follows the **Task Tracker** challenge from roadmap.sh:
 
-https://roadmap.sh/projects/task-tracker
+[https://roadmap.sh/projects/task-tracker](https://roadmap.sh/projects/task-tracker/solutions?u=6708f8e8fb4be684db21ad1e)
 
 ---
